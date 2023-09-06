@@ -19,17 +19,18 @@ type SearchFormState = {
 };
 
 const MainPage: FunctionComponent = () => {
-  const { register, handleSubmit, formState } = useForm<SearchFormState>();
+  const { register, handleSubmit } = useForm<SearchFormState>();
   const [isSearching, setIsSearching] = useState<boolean>(false);
+  const [hasNoResults, setHasNoResults] = useState<boolean>(false);
   const [searchResult, setSearchResult] = useState<
     TWeatherFormattedResponse | undefined
   >(undefined);
 
   const submitFn = async (data: SearchFormState) => {
     setIsSearching(true);
+    setHasNoResults(false);
+    setSearchResult(undefined);
     try {
-      console.log({ data });
-
       const geoCodeResponse: TReverseGeoCodingResponse[] =
         await getReverseGeoCoding({
           city: data.city,
@@ -37,6 +38,7 @@ const MainPage: FunctionComponent = () => {
         });
 
       if (geoCodeResponse.length === 0) {
+        setHasNoResults(true);
         setIsSearching(false);
         return;
       }
@@ -48,14 +50,16 @@ const MainPage: FunctionComponent = () => {
         lon: geoCode.lon,
       });
       setSearchResult(weatherResponse);
-    } catch (e) {}
-
+    } catch (e) {
+      setHasNoResults(true);
+      setIsSearching(false);
+    }
     setIsSearching(false);
   };
 
   return (
     <div>
-      <section className="mb-7">
+      <section className="mb-4">
         <form
           className="flex flex-wrap gap-3"
           onSubmit={handleSubmit(submitFn)}
@@ -84,8 +88,17 @@ const MainPage: FunctionComponent = () => {
           </div>
         </form>
       </section>
-      <section className="mb-7 pl-6">
-        {searchResult && <WeatherInformation {...searchResult} />}
+      <section className="mb-7 mt-2">
+        {searchResult && (
+          <div className="pl-6">
+            <WeatherInformation {...searchResult} />
+          </div>
+        )}
+        {hasNoResults && (
+          <div className="border-red-600 border-2 bg-red-100 pl-2">
+            Not found
+          </div>
+        )}
       </section>
       <section className="mb-7">
         <Header underline>Search History</Header>
