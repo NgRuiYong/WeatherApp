@@ -14,9 +14,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: IRootLayoutProps) {
   return (
     <html lang="en">
-      <body className="p-4 sm:p-5 font min-h-screen">
-        <Header underline>Today's Weather</Header>
-        <main>{children}</main>
+      <body className="p-4 sm:p-5 font min-h-screen min-w-fit max-w-full xl:flex xl:flex-col xl:items-center">
+        <main className="w-full  xl:w-[1280px]">
+          <Header underline>Today's Weather</Header>
+          {children}
+        </main>
       </body>
     </html>
   );
