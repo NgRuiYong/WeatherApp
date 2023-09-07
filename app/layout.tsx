@@ -1,4 +1,5 @@
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.min.css";
 import type { Metadata } from "next";
 import Header from "@/components/Header/Header";
 
