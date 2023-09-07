@@ -3,17 +3,22 @@ import { FunctionComponent, ReactNode, ButtonHTMLAttributes } from "react";
 type TButtonProps = {
   children: ReactNode;
   loading?: boolean;
+  rounded?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Button: FunctionComponent<TButtonProps> = ({
   children,
   loading,
   disabled,
+  rounded,
+  className,
   ...buttonProps
 }) => {
   return (
     <button
-      className="rounded py-2 px-3 shadow-lg disabled:opacity-10 disabled:cursor-not-allowed active:shadow-inner flex items-center "
+      className={`${className} ${
+        rounded ? "rounded-full" : "rounded"
+      } py-2 px-3 shadow-lg disabled:opacity-10 disabled:cursor-not-allowed active:shadow-inner flex items-center`}
       disabled={loading || disabled}
       {...buttonProps}
     >
