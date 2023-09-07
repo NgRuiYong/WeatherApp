@@ -1,7 +1,7 @@
 "use client";
 import { FunctionComponent, useMemo } from "react";
-import { toDate, utcToZonedTime, format } from "date-fns-tz";
 import Image from "next/image";
+import { convertUTCToTimeZone } from "@/utils/utils";
 
 export type TWeatherInformationProps = {
   city: string;
@@ -27,12 +27,10 @@ const WeatherInformation: FunctionComponent<TWeatherInformationProps> = ({
   timestamp,
   icon,
 }) => {
-  const getFormattedTime = useMemo(() => {
-    const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const utcDateTime = toDate(timestamp * 1000);
-    const convertedTime = utcToZonedTime(utcDateTime, userTimezone);
-    return format(convertedTime, "yyyy-MM-dd hh:mm a");
-  }, [timestamp]);
+  const getFormattedTime = useMemo(
+    () => convertUTCToTimeZone(timestamp * 1000, "yyyy-MM-dd hh:mm a"),
+    [timestamp]
+  );
 
   return (
     <div>
