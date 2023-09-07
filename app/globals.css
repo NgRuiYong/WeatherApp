@@ -31,7 +31,7 @@ h1 {
   }
 }
 
-.inputGroup > input {
+.inputGroup > div > input {
   height: 1.75em;
   border-radius: 0.25em;
   width: 100%;

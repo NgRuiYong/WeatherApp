@@ -26,7 +26,12 @@ type TSearchHistory = {
 };
 
 const MainPage: FunctionComponent = () => {
-  const { register, handleSubmit } = useForm<SearchFormState>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm<SearchFormState>();
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [hasNoResults, setHasNoResults] = useState<boolean>(false);
   const [searchResult, setSearchResult] = useState<
@@ -80,6 +85,8 @@ const MainPage: FunctionComponent = () => {
   const handleOnClickSearchHistory = async (
     searchFormData: SearchFormState
   ) => {
+    setValue("city", searchFormData.city);
+    setValue("countryCode", searchFormData.countryCode);
     await submitFn(searchFormData);
   };
 
@@ -111,7 +118,17 @@ const MainPage: FunctionComponent = () => {
             type="text"
             disabled={isSearching}
             required
-            {...register("countryCode")}
+            errorMessage={errors?.countryCode?.message}
+            {...register("countryCode", {
+              maxLength: {
+                value: 2,
+                message: "Only 2 characters allowed",
+              },
+              pattern: {
+                value: /^[a-zA-Z]+$/g,
+                message: "Only alphabets allowed",
+              },
+            })}
           />
           <div className="inputGroupButton">
             <Button loading={isSearching} type="submit">
